@@ -8,6 +8,16 @@ public class Region {
     public Region() {
     }
 
+    public Region(Integer id, Integer count) {
+        this.id = id;
+        this.count = count;
+    }
+
+    public Region(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Region(Integer id, String name, Integer count) {
         this.id = id;
         this.name = name;

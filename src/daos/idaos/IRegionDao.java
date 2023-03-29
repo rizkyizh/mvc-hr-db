@@ -8,7 +8,8 @@ import models.Region;
 public interface IRegionDao {
     public List<Region> getAll(); // getAll
 
-    // getById
+    public Region getById(Integer id); // getById
+
     // searchByName
 
     public boolean create(Region region); // create

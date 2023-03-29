@@ -71,15 +71,70 @@ public class RegionDAO implements IRegionDao {
 
     @Override
     public boolean update(Region region) {
-        String query = "UPDATE REGION SET name= ?";
+        boolean success = false;
+        String query = "UPDATE REGION SET ";
 
-        return false;
+        if (region.getName() != null && region.getCount() != null) {
+            query += "name= ?, count= ? WHERE id= ?";
+        } else if (region.getName() != null) {
+            query += "name= ? WHERE id= ?";
+        } else if (region.getCount() != null) {
+            query += "count= ? WHERE id= ?";
+        } else {
+            throw new IllegalArgumentException("At least one column to update must be specified.");
+        }
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            int indexParams = 1;
+            if (region.getName() != null) {
+                preparedStatement.setString(indexParams++, region.getName());
+            }
+            if (region.getCount() != null) {
+                preparedStatement.setInt(indexParams++, region.getCount());
+            }
+            preparedStatement.setInt(indexParams++, region.getId());
+
+            int rowsUpdate = preparedStatement.executeUpdate();
+
+            if (rowsUpdate > 0) {
+                success = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return success;
     }
 
     @Override
     public boolean delete(Region region) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    }
+
+    @Override
+    public Region getById(Integer id) {
+        String query = "SELECT * FROM REGION WHERE id= ?";
+        Region region = new Region();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            region.setId(resultSet.getInt(1));
+            region.setName(resultSet.getString(2));
+            region.setCount(resultSet.getInt(3));
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return region;
     }
 
 }
