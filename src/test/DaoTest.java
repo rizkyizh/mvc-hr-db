@@ -7,7 +7,8 @@ import tools.DBConnection;
 
 public class DaoTest {
     public static void main(String[] args) {
-        testUpdate_Region();
+        // testCreate_Region();
+        testDelete_Region();
     }
 
     public static void testGetAll_Region() {
@@ -31,7 +32,10 @@ public class DaoTest {
         DBConnection dbConnection = new DBConnection();
         IRegionDao regionDao = new RegionDAO(dbConnection.getConnection());
 
-        Region region = new Region(5, "Australia", 2);
+        Region region = new Region();
+        region.setId(9);
+        region.setName("malaysia");
+        region.setCount(1);
         System.out.println(regionDao.create(region));
 
     }
@@ -46,21 +50,41 @@ public class DaoTest {
 
     }
 
+    public static void testDelete_Region() {
+        DBConnection dbConnection = new DBConnection();
+        IRegionDao regionDao = new RegionDAO(dbConnection.getConnection());
+        Region region = new Region();
+        region.setName("malaYsia");
+
+        System.out.println(regionDao.delete(region));
+
+    }
+
+    public static void testSearchByName() {
+        DBConnection dbConnection = new DBConnection();
+        IRegionDao regionDao = new RegionDAO(dbConnection.getConnection());
+
+        for (Region region : regionDao.searchByName("%u%")) {
+            System.out.println(region);
+        }
+
+    }
+
     public static void testOnly() {
         Region region;
         boolean region2;
 
-        // region = new Region();
-        // region.setCount(2);
+        region = new Region();
+        region.setCount(2);
 
-        // region2 = region.getCount() == null;
+        region2 = region.getCount() == null;
 
-        // System.out.println(region2);
-        // int indexParams = 1;
-        // System.out.println(++indexParams);
-        // System.out.println("setelah di incre : " + indexParams);
-        // System.out.println(indexParams++);
-        // System.out.println(indexParams++);
+        System.out.println(region2);
+        int indexParams = 1;
+        System.out.println(++indexParams);
+        System.out.println("after incr : " + indexParams);
+        System.out.println(indexParams++);
+        System.out.println(indexParams++);
 
     }
 

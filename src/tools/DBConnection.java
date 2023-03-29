@@ -15,7 +15,6 @@ public class DBConnection {
             this.connection = DriverManager.getConnection(this.url, this.user, this.pass);
             System.out.println("Database Connected");
         } catch (Exception e) {
-            // TODO: handle exception
             System.out.println("Error Message = " + e.getMessage());
         }
         return connection;

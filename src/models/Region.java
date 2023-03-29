@@ -8,6 +8,10 @@ public class Region {
     public Region() {
     }
 
+    public Region(Integer id) {
+        this.id = id;
+    }
+
     public Region(Integer id, Integer count) {
         this.id = id;
         this.count = count;

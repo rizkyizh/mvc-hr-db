@@ -10,7 +10,7 @@ public interface IRegionDao {
 
     public Region getById(Integer id); // getById
 
-    // searchByName
+    public List<Region> searchByName(String name); // searchByName
 
     public boolean create(Region region); // create
 
