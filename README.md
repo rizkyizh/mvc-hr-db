@@ -3,20 +3,20 @@
 
 ### MVC (Model, View, Controller)
 
-- Task Framework MVC 1
+#### Task Framework MVC 1
 
-CRUD on Table Region:
+- CRUD on Table Region:
 
-- getAll ✅
-- getById ✅
-- searchByName ✅
-- create ✅
-- update ✅
-- delete
+  - getAll ✅
+  - getById ✅
+  - searchByName ✅
+  - create ✅
+  - update ✅
+  - delete ✅
 
-implements:
+- implements:
 
-- Models ✅
-- IDAOS => DAOs ✅
-- IControllers => Controllers 
-- Views
+  - Models ✅
+  - IDAOS => DAOs ✅
+  - IControllers => Controllers 
+  - Views
