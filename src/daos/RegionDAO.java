@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
 import daos.idaos.IRegionDao;
+import exeption.duplicateEntryForPrimaryKey;
 import models.Region;
+import tools.Utility;
 
 public class RegionDAO implements IRegionDao {
 
@@ -44,7 +47,7 @@ public class RegionDAO implements IRegionDao {
             preparedStatement.close();
             connection.close();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -85,8 +88,10 @@ public class RegionDAO implements IRegionDao {
             connection.close();
 
         } catch (SQLException e) {
+            System.out.println("failed to add data!");
+            System.out.println("id have used! please enter another id");
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error Message = " + e.getMessage());
         }
 
         return success;
@@ -194,10 +199,9 @@ public class RegionDAO implements IRegionDao {
             preparedStatement.close();
             connection.close();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Data is not found!");
         }
-
         return region;
     }
 
@@ -228,7 +232,7 @@ public class RegionDAO implements IRegionDao {
             connection.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new NullPointerException("Data is not found!");
         }
 
         return regions;

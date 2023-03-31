@@ -1,9 +1,9 @@
-import tools.DBConnection;
+
+import views.menus.MainMenuView;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        DBConnection dbConnection = new DBConnection();
-        System.out.println(dbConnection.getConnection());
-
+        MainMenuView main = new MainMenuView();
+        main.DisplayMenu();
     }
 }
