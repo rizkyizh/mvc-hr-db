@@ -1,6 +1,5 @@
 package controllers;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import controllers.icontrollers.IRegionController;
@@ -55,7 +54,6 @@ public class RegionController implements IRegionController {
 
     @Override
     public void deleteRegion() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteRegion'");
     }
 

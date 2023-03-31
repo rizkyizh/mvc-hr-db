@@ -3,13 +3,13 @@ package tools;
 import java.util.Scanner;
 
 public class Utility {
+    static Scanner inputTerminal = new Scanner(System.in);
 
     public static void displayMessage(String message) {
         System.out.println(message);
     }
 
     public static boolean yesOrNo(String message) {
-        Scanner inputTerminal = new Scanner(System.in);
         System.out.print("\n" + message + "[y/n]");
         String inputUser = inputTerminal.next();
         while (!inputUser.equalsIgnoreCase("y") && !inputUser.equalsIgnoreCase("n")) {
@@ -17,7 +17,6 @@ public class Utility {
             System.out.print("\n" + message + "[y/n] : ");
             inputUser = inputTerminal.next();
         }
-
         return inputUser.equalsIgnoreCase("y");
     }
 
