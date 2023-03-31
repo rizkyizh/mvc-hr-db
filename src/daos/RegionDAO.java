@@ -8,11 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import daos.idaos.IRegionDao;
+import exeption.databaseConnectionExeption;
 import models.Region;
+import tools.DBConnection;
+import tools.Utility;
 
 public class RegionDAO implements IRegionDao {
 
     private Connection connection;
+
+    public RegionDAO() {
+        try {
+            this.connection = new DBConnection().getConnection();
+        } catch (databaseConnectionExeption e) {
+            Utility.clearScreen();
+            System.out.println(e.getMessage());
+        }
+    }
 
     public RegionDAO(Connection connection) {
         this.connection = connection;
@@ -127,7 +139,6 @@ public class RegionDAO implements IRegionDao {
             }
 
             preparedStatement.close();
-            connection.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -194,7 +205,6 @@ public class RegionDAO implements IRegionDao {
 
             resultSet.close();
             preparedStatement.close();
-            connection.close();
 
         } catch (Exception e) {
             throw new IllegalArgumentException("Data is not found!");

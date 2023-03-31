@@ -10,7 +10,7 @@ public class Utility {
     }
 
     public static boolean yesOrNo(String message) {
-        System.out.print("\n" + message + "[y/n]");
+        System.out.print("\n" + message + "[y/n] : ");
         String inputUser = inputTerminal.next();
         while (!inputUser.equalsIgnoreCase("y") && !inputUser.equalsIgnoreCase("n")) {
             System.out.println("please select [y/n]");

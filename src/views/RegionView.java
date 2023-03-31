@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import models.Region;
-import tools.Utility;
 
 public class RegionView implements IViews<Region> {
     private Scanner scanner;
@@ -15,7 +14,7 @@ public class RegionView implements IViews<Region> {
 
     @Override
     public void displayList(List<Region> items) {
-        Utility.clearScreen();
+
         System.out.println("\n========== list of regions ==========");
         System.out.println("\n---------------------------------------");
         System.out.println("| id |    \tname\t      | count |");
