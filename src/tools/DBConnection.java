@@ -7,11 +7,15 @@ import exeption.databaseConnectionExeption;
 
 public class DBConnection {
     private Connection connection;
-    // private String url =
-    // "jdbc:mysql://localhost:3306/db_hr_sbkm?zeroDateTimeBehavior=convertToNull";
-    private String url = "jdbc:mysql://localhost:3306/db_hr_sbkm";
+
+    /*
+     * set mysql database
+     */
+    private String dbname = "db_hr_sbkm";
     private String user = "root";
     private String pass = "";
+
+    private String url = "jdbc:mysql://localhost:3306/" + dbname + "?zeroDateTimeBehavior=convertToNull";
 
     public Connection getConnection() throws databaseConnectionExeption {
         try {

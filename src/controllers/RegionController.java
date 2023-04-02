@@ -73,8 +73,6 @@ public class RegionController implements IRegionController {
                     regionView.readString("new name"),
                     regionView.readInteger("new count"));
 
-            System.out.println("isinya:" + updateRegion.getCount());
-
             RegionDAO regionDAO = new RegionDAO();
 
             if (updateRegion.getName().isEmpty()) {
@@ -95,7 +93,22 @@ public class RegionController implements IRegionController {
 
     @Override
     public void deleteRegion() {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteRegion'");
+        try {
+            this.listRegion();
+            regionView.displayMessage("==== Delete Data ==============");
+            int id = regionView.readInteger("input id which you want to delete");
+
+            Region region = new Region(id);
+            RegionDAO regionDAO = new RegionDAO();
+
+            if (regionDAO.getById(id) != null) {
+                regionDAO.delete(region);
+                regionView.displayMessage("Data id " + id + " has been deleted!");
+            }
+
+        } catch (Exception e) {
+            regionView.displayMessage(e.getMessage());
+        }
     }
 
     @Override
