@@ -49,7 +49,7 @@ public class MainMenuView {
                         regionController.listRegion();
                         break;
                     case "2":
-                        regionController.readRegion();
+                        regionController.readRegions();
                         break;
                     case "3":
                         regionController.createRegion();

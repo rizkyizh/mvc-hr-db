@@ -1,120 +1,105 @@
 package controllers;
 
 import java.util.List;
-
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import controllers.icontrollers.IRegionController;
 import daos.RegionDAO;
-import exeption.databaseConnectionExeption;
+import exeption.ValidationProperty;
 import models.Region;
-import tools.DBConnection;
 import tools.Utility;
-import views.RegionView;
 
 public class RegionController implements IRegionController {
 
     private RegionDAO regionDAO;
-    private RegionView regionView;
 
-    public RegionController(RegionDAO regionDAO, RegionView regionView) {
+    public RegionController(RegionDAO regionDAO) {
         this.regionDAO = regionDAO;
-        this.regionView = regionView;
     }
 
     @Override
-    public void createRegion() {
-        regionView.displayMessage("==== Add New Data ==============");
-        Region newRegion = new Region(
-                regionView.readInteger("id"),
-                regionView.readString("name"),
-                regionView.readInteger("count"));
-        boolean success = regionDAO.create(newRegion);
-        if (success) {
-            regionView.displayMessage("\nData added successfully");
-
-            try {
-                DBConnection dbConnection = new DBConnection();
-                RegionDAO regionDAO = new RegionDAO(dbConnection.getConnection());
-                RegionView regionView = new RegionView();
-                RegionController listupdate = new RegionController(regionDAO, regionView);
-                listupdate.listRegion();
-            } catch (databaseConnectionExeption e) {
-                Utility.clearScreen();
-                System.out.println(e.getMessage());
-            }
-        }
+    public List<Region> listRegions() {
+        return regionDAO.getAll();
     }
 
     @Override
-    public void readRegion() {
+    public String create(String id, String name, String count) {
+        String result = "";
         try {
-            String inpuString = regionView.readString("enter Id or Name");
-            if (inpuString.isEmpty()) {
-                regionView.displayMessage("Data is not found! please enter id or name");
-            } else if (inpuString.matches("\\d")) {
-                int byId = Integer.parseInt(inpuString);
-                Region result = regionDAO.getById(byId);
-                regionView.displayItem(result);
-            } else {
-                List<Region> result = regionDAO.searchByName(inpuString);
-                regionView.displaySearchItems(result);
-            }
+            this.validationPropertyRegion(id, name, count);
+            Region region = new Region(Integer.parseInt(id), name, Integer.parseInt(count));
+            region = regionDAO.save(region);
+            if (region != null) result = "Create region data successfully";
         } catch (Exception e) {
-            regionView.displayMessage(e.getMessage());
+            result = e.getMessage();
+        } catch (ValidationProperty e) {
+            result = e.getMessage();
         }
+        return result;
     }
 
     @Override
-    public void updateRegion() {
+    public Region getById(String id) {
+        return regionDAO.getById(Integer.parseInt(id));
+    }
+
+    @Override
+    public List<Region> searchNameByCharacter(String key) {
+        return regionDAO.searchByCharacter(key);
+    }
+
+    @Override
+    public List<Region> searchByName(String name) {
+        List<Region> regions = regionDAO
+                        .getAll()
+                        .stream()
+                        .filter(region -> region.getName().contains(name))
+                        .collect(Collectors.toList());
+        return regions;
+    }
+
+    @Override
+    public String update(String id, String name, String count) {
+        String result = "";
         try {
-            this.listRegion();
-            regionView.displayMessage("==== Update Data ==============");
-            Region updateRegion = new Region(
-                    regionView.readInteger("id (required)"),
-                    regionView.readString("new name"),
-                    regionView.readInteger("new count"));
-
-            RegionDAO regionDAO = new RegionDAO();
-
-            if (updateRegion.getName().isEmpty()) {
-                Region oldRegion = regionDAO.getById(updateRegion.getId());
-                updateRegion.setName(oldRegion.getName());
-            }
-
-            boolean success = regionDAO.update(updateRegion);
-            if (success) {
-                regionView.displayMessage("\nData update successfully");
-            } else {
-                regionView.displayMessage("\nData update failed! please enter correct Id");
-            }
+            this.validationPropertyRegion(id, name, count);
+            Region region = new Region(Integer.parseInt(id), name, Integer.parseInt(count));
+            region = this.regionDAO.save(region);
+            if (region != null) result = "Update region data successfully";
         } catch (Exception e) {
-            regionView.displayMessage(e.getMessage());
+            result = e.getMessage();
+        } catch (ValidationProperty e) {
+            result = e.getMessage();
         }
+        return result;
     }
 
     @Override
-    public void deleteRegion() {
+    public String delete(String id) {
+        if (!predicateisNumber.test(id)) return "input invalid! please enter an Interger";
         try {
-            this.listRegion();
-            regionView.displayMessage("==== Delete Data ==============");
-            int id = regionView.readInteger("input id which you want to delete");
-
-            Region region = new Region(id);
-            RegionDAO regionDAO = new RegionDAO();
-
-            if (regionDAO.getById(id) != null) {
+            int id_region = Integer.parseInt(id);
+            Region region = regionDAO.getById(id_region);
+            if (region == null) {
+                return "Data is not found!";
+            }else{
                 regionDAO.delete(region);
-                regionView.displayMessage("Data id " + id + " has been deleted!");
+                return "Delete region data successfully";
             }
-
         } catch (Exception e) {
-            regionView.displayMessage(e.getMessage());
+            return e.getMessage();
         }
     }
 
-    @Override
-    public void listRegion() {
-        List<Region> regions = regionDAO.getAll();
-        regionView.displayList(regions);
+    private void validationPropertyRegion(String id, String name, String count) throws ValidationProperty {
+        if (!predicateisNumber.test(id) || !predicateisNumber.test(count)) {
+            throw new ValidationProperty("input invalid! please enter an Integer") ;
+        } else if (!predicateisLetter.test(name)) {
+            throw new ValidationProperty( "input invalid! please enter a Letter");
+        }
     }
+
+    Predicate<String> predicateisNumber = Utility::isNumber;
+    Predicate<String> predicateisLetter = Utility::isLetter;
 
 }

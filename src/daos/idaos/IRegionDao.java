@@ -10,11 +10,13 @@ public interface IRegionDao {
 
     public Region getById(Integer id); // getById
 
-    public List<Region> searchByName(String name); // searchByName
+    public List<Region> searchByCharacter(String key); // searchByCharacter
 
-    public boolean create(Region region); // create
+    // public boolean create(Region region); // create
 
-    public boolean update(Region region); // update
+    // public boolean update(Region region); // update
+
+    public Region save(Region region); // create and update
 
     public boolean delete(Region region); // delete
 

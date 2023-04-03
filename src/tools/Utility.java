@@ -5,6 +5,20 @@ import java.util.Scanner;
 public class Utility {
     static Scanner inputTerminal = new Scanner(System.in);
 
+    public static boolean isNumber(String number) {
+        if (number.isEmpty()) {
+            return false;
+        }
+        return number.matches("\\d*");
+    }
+
+    public static boolean isLetter(String letter) {
+        if (letter.isEmpty()) {
+            return false;
+        }
+        return letter.matches("\\D*");
+    }
+
     public static void displayMessage(String message) {
         System.out.println(message);
     }

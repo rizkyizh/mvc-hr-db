@@ -22,7 +22,7 @@ public class RegionDAO implements IRegionDao {
             this.connection = new DBConnection().getConnection();
         } catch (databaseConnectionExeption e) {
             Utility.clearScreen();
-            System.out.println(e.getMessage());
+            Utility.displayMessage(e.getMessage());
         }
     }
 
@@ -36,7 +36,7 @@ public class RegionDAO implements IRegionDao {
         String query = "SELECT * FROM REGION";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = this.connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -48,13 +48,8 @@ public class RegionDAO implements IRegionDao {
                 regions.add(region);
             }
 
-            if (regions.isEmpty() || regions == null) {
-                throw new NullPointerException("Data is Empty!");
-            }
-
             resultSet.close();
             preparedStatement.close();
-            connection.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,117 +60,14 @@ public class RegionDAO implements IRegionDao {
     }
 
     @Override
-    public boolean create(Region region) {
-        boolean success = false;
-        String query = "INSERT INTO REGION"; // isParameterized Query
-
-        if (region.getId() != null) {
-            query += "(id, name, count) VALUES(?, ?, ?)";
-        }
-        if (region.getId() == null) {
-            query += "(name, count) VALUES(?, ?)";
-        }
-
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            int indexParams = 1;
-
-            if (region.getId() != null) {
-                preparedStatement.setInt(indexParams++, region.getId());
-            }
-
-            preparedStatement.setString(indexParams++, region.getName());
-            preparedStatement.setInt(indexParams++, region.getCount());
-
-            int rowsCreate = preparedStatement.executeUpdate();
-
-            if (rowsCreate > 0) {
-                success = true;
-            }
-
-            preparedStatement.close();
-            connection.close();
-
-        } catch (SQLException e) {
-            System.out.println("failed to add data!");
-            System.out.println("id have used! please enter another id");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return success;
-    }
-
-    @Override
-    public boolean update(Region region) {
-        boolean success = false;
-        String query = "UPDATE REGION SET ";
-
-        if (region.getName() != null && region.getCount() != null) {
-            query += "name= ?, count= ? WHERE id= ?";
-        } else if (region.getName() != null) {
-            query += "name= ? WHERE id= ?";
-        } else if (region.getCount() != null) {
-            query += "count= ? WHERE id= ?";
-        } else {
-            throw new IllegalArgumentException("At least one column to update must be specified.");
-        }
-
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            int indexParams = 1;
-            if (region.getName() != null) {
-                preparedStatement.setString(indexParams++, region.getName());
-            }
-            if (region.getCount() != null) {
-                preparedStatement.setInt(indexParams++, region.getCount());
-            }
-            preparedStatement.setInt(indexParams++, region.getId());
-
-            int rowsUpdate = preparedStatement.executeUpdate();
-
-            if (rowsUpdate > 0) {
-                success = true;
-            }
-
-            preparedStatement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return success;
-    }
-
-    @Override
     public boolean delete(Region region) {
         boolean success = false;
-        String query = "DELETE FROM REGION WHERE ";
-
-        if (region.getId() != null) {
-            query += "id= ?";
-        } else if (region.getName() != null) {
-            query += "name= ?";
-        } else if (region.getCount() != null) {
-            query += "count= ?";
-        } else {
-            throw new IllegalArgumentException("At least one column to update must be specified.");
-        }
-
+        String query = "DELETE FROM REGION WHERE id= ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            int indexParams = 1;
-            if (region.getId() != null) {
-                preparedStatement.setInt(indexParams, region.getId());
-            }
-            if (region.getName() != null) {
-                preparedStatement.setString(indexParams, region.getName());
-            }
-            if (region.getCount() != null) {
-                preparedStatement.setInt(indexParams, region.getCount());
-            }
+            preparedStatement.setInt(1, region.getId());
             int rowsUpdate = preparedStatement.executeUpdate();
-
+            
             if (rowsUpdate > 0) {
                 success = true;
             }
@@ -206,20 +98,20 @@ public class RegionDAO implements IRegionDao {
             resultSet.close();
             preparedStatement.close();
 
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Data is not found!");
+        } catch (SQLException e) {
+            region = null;
         }
         return region;
     }
 
     @Override
-    public List<Region> searchByName(String name) {
+    public List<Region> searchByCharacter(String key) {
         List<Region> regions = new ArrayList<>();
-        String query = "SELECT * FROM REGION WHERE name = ?";
+        String query = "SELECT * FROM REGION WHERE LOWER(name) LIKE LOWER(?) ORDER BY id";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, name);
+            preparedStatement.setString(1, "%" + key + "%");
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -236,13 +128,39 @@ public class RegionDAO implements IRegionDao {
 
             resultSet.close();
             preparedStatement.close();
-            connection.close();
 
         } catch (Exception e) {
             throw new NullPointerException("Data is not found!");
         }
 
         return regions;
+    }
+
+    @Override
+    public Region save(Region r) {
+        Region region = this.getById(r.getId());
+        System.out.println(region);
+        String query = (region == null) ? "INSERT INTO REGION (name, count, id) VALUES(?, ?, ?)"
+                : "UPDATE REGION SET name= ?, count= ? WHERE id= ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, r.getName());
+            preparedStatement.setInt(2, r.getCount());
+            preparedStatement.setInt(3, r.getId());
+
+            int rowsSave = preparedStatement.executeUpdate();
+
+            if (rowsSave > 0) {
+                region = r;
+            }
+
+            preparedStatement.close();
+
+        } catch (SQLException e) {
+            region = null;
+        }
+        return region;
     }
 
 }

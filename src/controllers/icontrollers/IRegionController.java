@@ -1,15 +1,23 @@
 package controllers.icontrollers;
 
+import java.util.List;
+
+import models.Region;
+
 public interface IRegionController {
 
-    public void createRegion();
+    public List<Region> listRegions();
 
-    public void readRegion();
+    public Region getById(String id);
 
-    public void updateRegion();
+    public List<Region> searchNameByCharacter(String key);
 
-    public void deleteRegion();
+    public List<Region> searchByName(String name);
 
-    public void listRegion();
+    public String create(String id, String name, String count);
+
+    public String update(String id, String name, String count);
+
+    public String delete(String id);
 
 }
