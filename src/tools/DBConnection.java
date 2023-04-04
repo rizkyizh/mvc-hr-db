@@ -22,7 +22,6 @@ public class DBConnection {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.connection = DriverManager.getConnection(this.url, this.user, this.pass);
-            System.out.println("database connected");
         } catch (Exception e) {
             throw new databaseConnectionExeption("Database is't Connected");
         }

@@ -1,9 +1,8 @@
 
-import views.menus.MainMenuView;
+import views.MainMenu;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        MainMenuView main = new MainMenuView();
-        main.DisplayMenu();
+        MainMenu.DisplayMenu();
     }
 }

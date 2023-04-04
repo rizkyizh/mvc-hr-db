@@ -13,6 +13,10 @@ public class RegionController implements IRegionController {
 
     private RegionDAO regionDAO;
 
+    public RegionController() {
+        this.regionDAO = new RegionDAO();
+    }
+
     public RegionController(RegionDAO regionDAO) {
         this.regionDAO = regionDAO;
     }
@@ -28,13 +32,17 @@ public class RegionController implements IRegionController {
         try {
             this.validationPropertyRegion(id, name, count);
             Region region = new Region(Integer.parseInt(id), name, Integer.parseInt(count));
-            region = regionDAO.save(region);
-            if (region != null) result = "Create region data successfully";
+            if (regionDAO.getById(region.getId()) == null) {
+                region = regionDAO.save(region);
+                if (region == null) result = "Create region data successfully";
+            }else{
+                result = "Region with id " + region.getId() + " already registered!\nplease input another id!"; 
+            }
         } catch (Exception e) {
             result = e.getMessage();
         } catch (ValidationProperty e) {
             result = e.getMessage();
-        }
+        } 
         return result;
     }
 
@@ -53,7 +61,7 @@ public class RegionController implements IRegionController {
         List<Region> regions = regionDAO
                         .getAll()
                         .stream()
-                        .filter(region -> region.getName().contains(name))
+                        .filter(region -> region.getName().equalsIgnoreCase(name))
                         .collect(Collectors.toList());
         return regions;
     }
@@ -64,8 +72,12 @@ public class RegionController implements IRegionController {
         try {
             this.validationPropertyRegion(id, name, count);
             Region region = new Region(Integer.parseInt(id), name, Integer.parseInt(count));
-            region = this.regionDAO.save(region);
-            if (region != null) result = "Update region data successfully";
+            if (regionDAO.getById(region.getId()) != null) {
+                region = this.regionDAO.save(region);
+                if (region != null) result = "Update region data successfully";
+            }else{
+                result = "Region with id " + region.getId() + " have not registered!\nplease input another id!";
+            }
         } catch (Exception e) {
             result = e.getMessage();
         } catch (ValidationProperty e) {
@@ -92,10 +104,12 @@ public class RegionController implements IRegionController {
     }
 
     private void validationPropertyRegion(String id, String name, String count) throws ValidationProperty {
-        if (!predicateisNumber.test(id) || !predicateisNumber.test(count)) {
-            throw new ValidationProperty("input invalid! please enter an Integer") ;
+        if (!predicateisNumber.test(id)) {
+            throw new ValidationProperty("input id invalid! please enter an Integer");
         } else if (!predicateisLetter.test(name)) {
-            throw new ValidationProperty( "input invalid! please enter a Letter");
+            throw new ValidationProperty( "input name invalid! please enter a Letter");
+        }else if (!predicateisNumber.test(count)) {
+            throw new ValidationProperty("input count invalid! please enter an Integer");
         }
     }
 

@@ -139,7 +139,6 @@ public class RegionDAO implements IRegionDao {
     @Override
     public Region save(Region r) {
         Region region = this.getById(r.getId());
-        System.out.println(region);
         String query = (region == null) ? "INSERT INTO REGION (name, count, id) VALUES(?, ?, ?)"
                 : "UPDATE REGION SET name= ?, count= ? WHERE id= ?";
 
@@ -149,11 +148,7 @@ public class RegionDAO implements IRegionDao {
             preparedStatement.setInt(2, r.getCount());
             preparedStatement.setInt(3, r.getId());
 
-            int rowsSave = preparedStatement.executeUpdate();
-
-            if (rowsSave > 0) {
-                region = r;
-            }
+            preparedStatement.executeUpdate();
 
             preparedStatement.close();
 
