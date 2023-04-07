@@ -51,7 +51,7 @@ public class CountryController implements ICountryController {
     public String create(String id, String name, String region_id) {
         String result = "";
         try {
-            this.validationPropertyRegion(id, name, region_id);           
+            this.validationPropertyCountry(id, name, region_id);           
             Country country = new Country(id, name, Integer.parseInt(region_id));
             if (countryDAO.getById(country.getId()) == null) {
                 country = countryDAO.save(country);
@@ -71,7 +71,7 @@ public class CountryController implements ICountryController {
     public String update(String id, String name, String region_id) {
         String result = "";
         try {
-            this.validationPropertyRegion(id, name, region_id);           
+            this.validationPropertyCountry(id, name, region_id);           
             Country country = new Country(id, name, Integer.parseInt(region_id));
             if (countryDAO.getById(country.getId()) != null) {
                 country = this.countryDAO.save(country);
@@ -104,7 +104,7 @@ public class CountryController implements ICountryController {
     }
 
 
-    private void validationPropertyRegion(String id, String name, String region_id) throws ValidationProperty {
+    private void validationPropertyCountry(String id, String name, String region_id) throws ValidationProperty {
         if (!predicateisLetter.test(id)) {
             throw new ValidationProperty( "input id invalid! please enter a Letter");
         } else if (!predicateisLetter.test(name)) {
