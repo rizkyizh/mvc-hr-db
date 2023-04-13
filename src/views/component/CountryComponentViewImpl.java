@@ -58,9 +58,7 @@ public class CountryComponentViewImpl implements IComponentView<Country> {
         System.out.println("\n+-------------------------------------------+");
         System.out.println("|  id  |       \tname\t           | region |");
         System.out.println("+-------------------------------------------+");
-        for (Country region : items) {
-            System.out.printf("| %-4s | %-25s | %-6d |\n", region.getId(), region.getName(), region.getRegion_id());
-        }
+        items.forEach(region-> System.out.printf("| %-4s | %-25s | %-6d |\n", region.getId(), region.getName(), region.getRegion_id()));
         System.out.println("+-------------------------------------------+");
     }
 
@@ -70,9 +68,7 @@ public class CountryComponentViewImpl implements IComponentView<Country> {
             System.out.println("\n+---------------------------------------+");
             System.out.println("|  id  |      \tname\t       | region |");
             System.out.println("+---------------------------------------+");
-
             System.out.printf("| %-4s | %-25s | %-6d |\n", item.getId(), item.getName(), item.getRegion_id());
-
             System.out.println("+---------------------------------------+");
             System.out.println("data is not found!");
         }

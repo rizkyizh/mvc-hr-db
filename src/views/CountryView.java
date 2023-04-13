@@ -29,7 +29,6 @@ public class CountryView implements IViews{
         String newId = countryComponent.readString("new id (required)");
         String newName = countryComponent.readString("new Name");
         String region_id = countryComponent.readString("region id (id already registered)");
-
         String result = countryController.create(newId.toUpperCase(), newName, region_id);
         countryComponent.displayMessage(result);
         if (result.contains("successfully")) {
@@ -43,7 +42,6 @@ public class CountryView implements IViews{
         String newId = countryComponent.readString("\nid (required)");
         String newName = countryComponent.readString("Name");
         String newCount = countryComponent.readString("region id");
-
         String result = countryController.update(newId, newName, newCount);
         countryComponent.displayMessage(result);
     }

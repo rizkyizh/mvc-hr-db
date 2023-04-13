@@ -28,7 +28,6 @@ public class RegionView implements IViews{
         String newId = regionComponent.readString("\nnew id (required)");
         String newName = regionComponent.readString("new Name");
         String newCount = regionComponent.readString("new count");
-
         String result = regionController.create(newId, newName, newCount);
         regionComponent.displayMessage(result);
         if (result.contains("successfully")) {
@@ -42,10 +41,8 @@ public class RegionView implements IViews{
         String newId = regionComponent.readString("\nid (required)");
         String newName = regionComponent.readString("Name");
         String newCount = regionComponent.readString("count");
-
         String result = regionController.update(newId, newName, newCount);
         regionComponent.displayMessage(result);
-    
     }
 
     @Override
@@ -53,7 +50,6 @@ public class RegionView implements IViews{
         this.ShowDataList();
         String id = regionComponent.readString("enter id");
         regionComponent.displayMessage(regionController.delete(id));
-        
     }
     
 }

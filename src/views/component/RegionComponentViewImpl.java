@@ -2,7 +2,6 @@ package views.component;
 
 import java.util.List;
 import java.util.Scanner;
-
 import models.Region;
 
 public class RegionComponentViewImpl implements IComponentView<Region> {
@@ -14,14 +13,11 @@ public class RegionComponentViewImpl implements IComponentView<Region> {
 
     @Override
     public void displayList(List<Region> items) {
-
         System.out.println("\n============ LIST OF REGIONS ============");
         System.out.println("\n+---------------------------------------+");
         System.out.println("| id |    \tname\t       | count  |");
         System.out.println("+---------------------------------------+");
-        for (Region region : items) {
-            System.out.printf("| %2d | %-23s | %-6d |\n", region.getId(), region.getName(), region.getCount());
-        }
+        items.forEach(region -> System.out.printf("| %2d | %-23s | %-6d |\n", region.getId(), region.getName(), region.getCount()));
         System.out.println("+---------------------------------------+");
     }
 
@@ -29,6 +25,7 @@ public class RegionComponentViewImpl implements IComponentView<Region> {
     public void displayMessage(String message) {
         System.out.println(message);
     }
+
 
     @Override
     public String readString(String prompt) {
@@ -46,7 +43,6 @@ public class RegionComponentViewImpl implements IComponentView<Region> {
                 System.out.println("Invalid Input!");
                 System.out.println("Please enter an Interger!");
             }
-
         }
     }
 
@@ -60,7 +56,6 @@ public class RegionComponentViewImpl implements IComponentView<Region> {
                 System.out.println("Invalid Input!");
                 System.out.println("Please enter a Number!");
             }
-
         }
     }
 
@@ -70,9 +65,7 @@ public class RegionComponentViewImpl implements IComponentView<Region> {
             System.out.println("\n+---------------------------------------+");
             System.out.println("| id |    \tname\t       | count  |");
             System.out.println("+---------------------------------------+");
-
             System.out.printf("| %2d | %-23s | %-6d |\n", item.getId(), item.getName(), item.getCount());
-
             System.out.println("+---------------------------------------+");
         } else {
             System.out.println("data is not found!");
